@@ -1,10 +1,9 @@
 'use client'
 
 import Heading from '@/components/heading'
-import { prefix } from '@/utils/prefix'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Search, Filter, X } from 'iconoir-react'
+import PostPreview from './PostPreview'
 
 const SearchBar = ({
   searchQuery,
@@ -100,6 +99,7 @@ const ListView = ({
     content: string
     date: string
     title: string
+    preview: string
   }[]
   initialPostsToShow: number
   setInitialPostsToShow: (count: number) => void
@@ -107,38 +107,7 @@ const ListView = ({
   return (
     <div>
       {filteredPosts.slice(0, initialPostsToShow).map((post, index) => (
-        <Link key={post.slug} href={`${prefix}/news/${post.slug}`}>
-          <div className="group mt-4 border border-border p-4  bg-foreground hover:bg-border/30 transition-all duration-200 hover:scale-[1.01]">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <h3 className="text-lg font-tomorrow text-white group-hover:text-csred transition-colors">
-                  {post.title.length > 50
-                    ? `${post.title.slice(0, 47)}...`
-                    : post.title}
-                </h3>
-                <span className="text-sm text-zinc-400 font-space-mono">
-                  {new Date(post.date).toLocaleDateString('en-GB', {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </span>
-              </div>
-            </div>
-            <p
-              className="text-sm opacity-70 leading-relaxed mt-2"
-              style={{
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-              }}
-            >
-              {post.content.slice(0, 180)}...
-            </p>
-          </div>
-        </Link>
+        <PostPreview key={post.slug} post={post} />
       ))}
 
       {initialPostsToShow < filteredPosts.length && (
@@ -163,6 +132,7 @@ const NewsList = ({
     content: string
     title: string
     date: string
+    preview: string
   }[]
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
